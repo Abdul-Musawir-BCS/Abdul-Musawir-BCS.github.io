@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abdul Musawir — Video Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#010106; --glass:rgba(255,255,255,0.045); --glass-b:rgba(255,255,255,0.09);
+  --text:#ffffff; --dim:#d2d6e8;
+  --blue:#2f8bff; --pink:#ff2d9b; --red:#ff4530; --purple:#a23dff; --teal:#00f5c8; --peach:#ff9a1f;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#010106;--text:#f2f3f8;}}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px);}
+html,body{width:100%;max-width:100%;overflow-x:hidden;height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);position:relative;}
+.mono{font-family:'JetBrains Mono',monospace;}
+.glow{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none;opacity:0.62;}
+.glow3{width:340px;height:340px;background:var(--pink);top:38%;left:42%;opacity:0.18;}
+.glow1{width:460px;height:460px;background:var(--peach);top:-120px;left:-100px;}
+.glow2{width:420px;height:420px;background:var(--purple);bottom:-140px;right:-100px;}
+.glass{background:linear-gradient(145deg,rgba(255,255,255,0.13),rgba(255,255,255,0.03) 60%,rgba(255,255,255,0.07)),rgba(10,12,28,0.28);
+  border:1px solid rgba(255,255,255,0.22);backdrop-filter:blur(22px) saturate(190%);-webkit-backdrop-filter:blur(22px) saturate(190%);
+  border-radius:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.22),inset 0 -1px 0 rgba(255,255,255,0.04),0 12px 32px rgba(0,0,0,0.35);}
+.shell{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:18px 20px 60px;display:grid;grid-template-columns:76px 1fr 260px;gap:18px;}
+
+/* sidebar */
+.rail{position:sticky;top:18px;height:fit-content;padding:18px 10px;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.rail a{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  color:var(--dim);text-decoration:none;font-size:18px;background:transparent;transition:.2s;}
+.rail a:hover,.rail a.active{background:linear-gradient(145deg,rgba(162,61,255,0.65),rgba(47,139,255,0.35));color:#fff;border:1px solid rgba(255,255,255,0.3);box-shadow:inset 0 1px 0 rgba(255,255,255,0.35);}
+
+/* main col */
+.main{min-width:0;}
+.topnav{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.topnav .date{font-size:12px;color:var(--dim);}
+.topnav nav{display:flex;gap:22px;font-size:14px;color:var(--dim);flex-wrap:wrap;}
+.topnav nav a{color:var(--dim);text-decoration:none;}
+.topnav nav a:hover{color:var(--text);}
+
+.hero{padding:26px 24px;margin-bottom:18px;}
+.hero .eyebrow{font-size:12px;color:var(--teal);text-shadow:0 0 14px rgba(0,245,200,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.hero h1{font-size:clamp(26px,5vw,34px);margin-bottom:6px;}
+.hero p{color:var(--dim);font-size:14.5px;max-width:480px;margin-bottom:18px;}
+.btn,.hero .cta{text-shadow:0 1px 4px rgba(0,0,0,0.85);font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#fff;padding:11px 22px;border-radius:14px;
+  text-decoration:none;font-size:13.5px;font-weight:600;position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(162,61,255,0.42),rgba(47,139,255,0.2) 70%,rgba(255,255,255,0.1));
+  border:1px solid rgba(255,255,255,0.28);backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.4),inset 0 -6px 12px rgba(162,61,255,0.12),0 8px 22px rgba(0,0,0,0.3);transition:.2s;}
+.btn::before,.hero .cta::before{content:'';position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0));pointer-events:none;}
+.btn:hover,.hero .cta:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.45);}
+.btn.alt{background:linear-gradient(145deg,rgba(0,245,200,0.3),rgba(47,139,255,0.16) 70%,rgba(255,255,255,0.08));}
+.btn.pink{background:linear-gradient(145deg,rgba(255,45,155,0.38),rgba(255,69,48,0.16) 70%,rgba(255,255,255,0.08));}
+.btn.blue{background:linear-gradient(145deg,rgba(47,139,255,0.42),rgba(0,245,200,0.12) 70%,rgba(255,255,255,0.08));}
+.btn-row{display:flex;flex-direction:column;gap:10px;}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;}
+.stat{padding:16px;position:relative;overflow:hidden;}
+.stat .n{font-size:24px;font-weight:700;}
+.stat.c1 .n{color:#6db2ff}.stat.c2 .n{color:#ff7ac0}.stat.c3 .n{color:#ff8a70}.stat.c4 .n{color:#c88aff}
+.stat .l{font-size:11.5px;color:var(--dim);margin-top:2px;}
+.stat::after{content:'';position:absolute;right:-20px;bottom:-20px;width:70px;height:70px;border-radius:50%;filter:blur(18px);opacity:.6;}
+.stat.c1::after{background:var(--blue);} .stat.c2::after{background:var(--pink);}
+.stat.c3::after{background:var(--red);} .stat.c4::after{background:var(--purple);}
+
+.sect{margin-bottom:30px;}
+.sect h2{font-size:17px;margin-bottom:3px;}
+.sect .sub{font-size:12.5px;color:var(--dim);margin-bottom:14px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+.tile{padding:16px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--text);transition:.2s;}
+.tile:hover{transform:translateY(-3px);border-color:var(--glass-b);}
+.tile .thumb{height:70px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;}
+.tile .thumb{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.2);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);}
+.tile .thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,0.34),rgba(255,255,255,0) 55%);pointer-events:none;}
+.side .row{font-size:13px;color:var(--text);word-break:break-all;margin-bottom:6px;}
+.side .row span{display:block;font-size:11px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;}
+.tile .name{font-size:13.5px;font-weight:600;}
+.tile .tag{font-size:11px;color:var(--dim);}
+
+/* right panel */
+.side{display:flex;flex-direction:column;gap:14px;}
+.side .card{padding:20px;}
+.avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(145deg,rgba(139,92,246,0.5),rgba(91,141,239,0.25));border:1px solid rgba(255,255,255,0.3);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);
+  display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:10px;}
+.side h3{font-size:15px;margin-bottom:4px;}
+.side p{font-size:12.5px;color:var(--dim);margin-bottom:12px;}
+.ring{width:110px;height:110px;border-radius:50%;margin:0 auto 10px;
+  background:conic-gradient(var(--teal) 0 65%, var(--purple) 65% 100%);
+  display:flex;align-items:center;justify-content:center;}
+.ring .in{width:82px;height:82px;border-radius:50%;background:#0d0f18;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;}
+.ring .in b{font-size:18px;} .ring .in span{font-size:10px;color:var(--dim);}
+.leg{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);padding:4px 2px;}
+.leg b{color:var(--text);}
+
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr;padding:14px 14px 50px;}
+  .rail{position:static;flex-direction:row;justify-content:center;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .topnav nav{gap:14px;font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div class="glow glow3"></div><div class="glow glow1"></div><div class="glow glow2"></div>
+<div class="shell">
+
+  <aside class="rail glass">
+    <a href="#top" class="active" title="Home">⌂</a>
+    <a href="#work" title="Work">▣</a>
+    <a href="#skills" title="Skills">✦</a>
+    <a href="#contact" title="Contact">✉</a>
+  </aside>
+
+  <main class="main" id="top">
+    <div class="topnav glass">
+      <span class="date mono">Peshawar, PK · Available for work</span>
+      <nav>
+        <a href="#work">Work</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+      </nav>
+    </div>
+
+    <section class="hero glass">
+      <div class="eyebrow">Video Editor · Motion Design</div>
+      <h1>Hey, I'm Abdul Musawir 👋</h1>
+      <p>4+ years editing for clients across multiple markets — speed ramps, product promos, branding reels, and 3D-tracked motion graphics. Here's a fresh cut of recent work.</p>
+      <a href="#work" class="cta">View recent work ↓</a>
+    </section>
+
+    <div class="stats">
+      <div class="stat glass c1"><div class="n">4+</div><div class="l">Years editing</div></div>
+      <div class="stat glass c2"><div class="n">14+</div><div class="l">Recent edits</div></div>
+      <div class="stat glass c3"><div class="n">5</div><div class="l">Edit categories</div></div>
+      <div class="stat glass c4"><div class="n">Multi</div><div class="l">Market clients</div></div>
+    </div>
+
+    <section class="sect" id="work">
+      <h2>Speed Ramps with 3D Camera</h2>
+      <div class="sub">High-energy ramps synced to tracked camera moves.</div>
+      <div class="grid">
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1DgMwUlclhLl2S4DH1QzBzrfI9aPddkY9/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--blue),#2a3a6b)">▶</div><div class="name">Speed Ramp 01</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1qvEOrZLQ_KmmSbVxs-zWL03lXaQaSrcG/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--blue),#2a3a6b)">▶</div><div class="name">Speed Ramp 02</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1_QUD5qJHTQ-k0CELH9DjO_htlhjBtE42/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--blue),#2a3a6b)">▶</div><div class="name">Speed Ramp 03</div><div class="tag">Watch on Drive</div></a>
+      </div>
+    </section>
+
+    <section class="sect">
+      <h2>Product Promotion</h2>
+      <div class="sub">Clean, sales-ready cuts for product and service promos.</div>
+      <div class="grid">
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1v31B4RAkp1fj_bbKsAiJcK4vjNEDVzsp/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--pink),#7a2a5b)">▶</div><div class="name">Product Promo 01</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1oF05D_3GUcuVHrWwOkcgvS9huZah2DH-/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--pink),#7a2a5b)">▶</div><div class="name">Product Promo 02</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/15EXCR_FAq4XZoMdWfNG_1_qrMESZglVj/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--pink),#7a2a5b)">▶</div><div class="name">Product Promo 03</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1qxJRQw1_eu660eRmDxgWu962yQKPs-uF/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--pink),#7a2a5b)">▶</div><div class="name">Product Promo 04</div><div class="tag">Watch on Drive</div></a>
+      </div>
+    </section>
+
+    <section class="sect">
+      <h2>Branding &amp; Business Promotion</h2>
+      <div class="sub">Reels built to introduce a business and its identity.</div>
+      <div class="grid">
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/12J76fWg5eSsZqGCowC5WDyxuA3LHF1rA/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--red),#7a2a2a)">▶</div><div class="name">Branding 01</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1-1Zx95up81ygpDeJx1T5T-Xvsj0PJJ-6/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--red),#7a2a2a)">▶</div><div class="name">Branding 02</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/11LFsnhdMkUHD8sF2Q3WonEkdxKzNIzTc/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--red),#7a2a2a)">▶</div><div class="name">Branding 03</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1EfuxPnlmZ_LirSaTiSnvFFvmlWr2qkBj/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--red),#7a2a2a)">▶</div><div class="name">Branding 04</div><div class="tag">Watch on Drive</div></a>
+      </div>
+    </section>
+
+    <section class="sect">
+      <h2>3D Camera &amp; Tracking</h2>
+      <div class="sub">Tracked footage with composited 3D elements.</div>
+      <div class="grid">
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1LAo0mdb7_2RncM0Z4zVqNwi2R9yHbI5q/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--teal),#1a5a4a)">▶</div><div class="name">3D Tracking 01</div><div class="tag">Watch on Drive</div></a>
+        <a class="tile glass" target="_blank" href="https://drive.google.com/file/d/1J0WvzX_mSLIZRFzLG7SwbHGmCBBXgdiN/view?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--teal),#1a5a4a)">▶</div><div class="name">3D Tracking 02</div><div class="tag">Watch on Drive</div></a>
+      </div>
+    </section>
+
+    <section class="sect" id="skills">
+      <h2>Other Edits</h2>
+      <div class="sub">Animations, reviews, anime edits, logo &amp; PFP work.</div>
+      <div class="grid">
+        <a class="tile glass" target="_blank" href="https://drive.google.com/drive/folders/1KdbtO98nNpBqTadwDKf8ceDc46XxsAi7?usp=sharing"><div class="thumb" style="background:linear-gradient(135deg,var(--purple),#3a1a6b)">▣</div><div class="name">Full Folder</div><div class="tag">Open in Drive</div></a>
+      </div>
+    </section>
+  </main>
+
+  <aside class="side" id="contact">
+    <div class="card glass">
+      <div class="avatar">AM</div>
+      <h3>Abdul Musawir</h3>
+      <p>Video Editor · CS Student</p>
+      <div class="row"><span>Email</span>060Danial060@gmail.com</div>
+      <div class="row"><span>Phone</span>0343 9893922</div>
+      <div class="btn-row" style="margin-top:12px;">
+        <a href="mailto:060Danial060@gmail.com" class="btn">✉ Email me</a>
+        <a href="tel:+923439893922" class="btn alt">☎ Call</a>
+        <a href="https://www.linkedin.com/in/abdul-musawir-520b5140a/" target="_blank" rel="noopener" class="btn blue">in LinkedIn</a>
+        <a href="https://github.com/Abdul-Musawir-BCS" target="_blank" rel="noopener" class="btn pink">⌥ GitHub</a>
+      </div>
+    </div>
+    <div class="card glass">
+      <div class="ring"><div class="in"><b>5</b><span>Categories</span></div></div>
+      <div class="leg"><span>● Skills &amp; tools</span><b>Multi</b></div>
+      <div class="leg"><span>● Software</span><b>AE · CapCut</b></div>
+      <div class="leg"><span>● Status</span><b>Open</b></div>
+    </div>
+  </aside>
+
+</div>
+</body>
+</html>
